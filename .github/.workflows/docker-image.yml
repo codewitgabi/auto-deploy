@@ -1,0 +1,55 @@
+name: Docker Image CI
+
+on:
+  push:
+    branches: ["main"]
+  pull_request:
+    branches: ["main"]
+
+jobs:
+  build:
+    runs-on: self-hosted
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Generate .env file
+        uses: SpicyPizza/create-envfile@v1.3
+        with:
+          # 3rd party variables.
+
+          envkey_POSTGRES_DB: ${{ secrets.POSTGRES_DB }}
+          envkey_POSTGRES_USER: ${{ secrets.POSTGRES_USER }}
+          envkey_POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
+          envkey_CERTBOT_EMAIL: ${{ secrets.CERTBOT_EMAIL }}
+          envkey_CERTBOT_DOMAIN: ${{ secrets.CERTBOT_DOMAIN }}
+          envkey_DEBUG: ${{ secrets.DEBUG }}
+          envkey_SECRET_KEY: ${{ secrets.SECRET_KEY }}
+
+          file_name: .env
+          fail_on_empty: false
+
+      - name: Build the Docker image
+        run: |
+          docker compose build
+          docker compose run --rm web python manage.py makemigrations     
+          docker compose run --rm web python manage.py migrate 
+          docker compose run --rm web python manage.py collectstatic --no-input
+
+  # test:
+  #   runs-on: self-hosted
+  #   needs:
+  #     - build
+  #   steps:
+  #     - name: Run tests
+  #       run: |
+  #         docker compose run --rm web python manage.py test
+
+  deploy:
+    runs-on: self-hosted
+    needs:
+      - build
+      - test
+    steps:
+      - name: Deploy
+        run: |
+          docker compose up -d --force-recreate --remove-orphans
