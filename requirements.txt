@@ -2,3 +2,4 @@ django
 tzdata
 psycopg2
 gunicorn
+whitenoise
