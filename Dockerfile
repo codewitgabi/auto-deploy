@@ -2,7 +2,7 @@ FROM python:3.10
 
 # Set environment variables
 ENV PYTHONUNBUFFERED 1
-ENV DJANGO_SETTINGS_MODULE project.settings
+ENV DJANGO_SETTINGS_MODULE autoDeploy.settings
 
 # Create and set the working directory
 RUN mkdir /code
