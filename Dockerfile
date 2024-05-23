@@ -24,4 +24,4 @@ EXPOSE 9000
 
 
 # Run Django development server
-CMD ["python", "manage.py", "runserver", "0.0.0.0:8090"]
+CMD ["python3", "manage.py", "runserver", "0.0.0.0:9000"]
