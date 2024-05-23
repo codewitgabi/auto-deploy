@@ -34,7 +34,6 @@ services:
     restart: always
     volumes:
       - ./:/code
-      - static
       # - certbot:/etc/letsencrypt
       # - certbot:/var/www/certbot
     env_file:
