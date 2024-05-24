@@ -34,8 +34,8 @@ services:
     restart: always
     volumes:
       - ./:/code
-      # - certbot:/etc/letsencrypt
-      # - certbot:/var/www/certbot
+      - certbot:/etc/letsencrypt
+      - certbot:/var/www/certbot
     env_file:
       - .env
     depends_on:
@@ -43,5 +43,5 @@ services:
 
 volumes:
   static:
-  # certbot:
+  certbot:
   postgres_data:
